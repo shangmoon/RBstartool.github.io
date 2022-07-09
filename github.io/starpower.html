@@ -1,0 +1,968 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel ="stylesheet" href="css/style.css">
+
+	<style>
+		table{
+				width:60% ; 
+				border:1px;
+				border-style:solid;
+				text-align: center;
+		}
+		table td{
+				border: 0.5px;
+				border-style:solid; 
+		}
+	</style>
+
+<title>台服星力衝星工具</title>
+
+</head>
+
+	
+<body>
+	
+<div class="main">
+	<div class="title">
+	<p>RB星力衝星工具</p>
+	</div>
+
+<div class="star1">
+	<img src="image/noSTAR.png" width="20" height="20" id="star1" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star2" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star3" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star4" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star5" alt=""/>
+
+	<img src="image/noSTAR.png" width="20" height="20" id="star6" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star7" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star8" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star9" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star10" alt=""/>
+
+	<img src="image/noSTAR.png" width="20" height="20" id="star11" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star12" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star13" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star14" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star15" alt=""/>
+</div>
+	<div class="star2">
+	<img src="image/noSTAR.png" width="20" height="20" id="star16" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star17" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star18" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star19" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star20" alt=""/>
+
+	<img src="image/noSTAR.png" width="20" height="20" id="star21" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star22" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star23" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star24" alt=""/>
+	<img src="image/noSTAR.png" width="20" height="20" id="star25" alt=""/>
+</div>
+	
+
+
+
+
+
+
+<div class="dragon"><br>
+
+	<img class="dragon" id = "dragon" src="image/normal.png" width="80" height="79" alt=""/>
+	</div>
+	<div class="whatstar" id="whatstar">
+		<p class="check"></p>
+	</div>
+
+	<div class="anya" id="anya" background-image= "image/anyatalk.png">
+		
+		<img src="image/anyatalk.png" width="inherit" height="190" class="anyatalk" alt="" />
+		<img src="image/06.gif" width="100" height="100" class="anyapic" alt="" />
+		<p id="anyasay" class="anyatext" >祝你衝星愉快!</p>
+		
+		<p class="chance" id="chance"></p>
+			
+	</div>
+
+	<br>
+		
+	
+
+	
+	<div class="button">
+		<div class="rushstar1">
+			<button onClick="rushstar()" class="buttonstar1"><p>衝星</p></button>
+			<script>
+//全域參數		
+			var star_time = 0 ; //衝星次數
+			var fail_two = 0;   //失敗兩次會成功
+			var star_what = 0; //目前第幾星
+			var ran = 0;  //亂數
+			var fail_time = 0; //失敗次數
+			var broke_time = 0; //破壞次數
+				
+			var needmoney = 0; //需要金額
+			var cost = 0;      //這次的花費
+			var money = 0;	   //累積金額
+				
+			var needpoint = 0; //需要點數
+			var point = 0 ; //累積點數
+				
+			var level = 100;   //裝備等級
+			var successpro = 0;  //成功機率
+			var brokenpro =0;  //失敗機率
+			var stardownpro = 0; //失敗時下滑機率
+			var starnoch = 0; //失敗時維持機率
+				
+//改變使用點數金額判斷   
+			function usepoint(){
+				needpoint = 9;
+			if(document.getElementById("usepoint").checked == true)			  
+			{
+				if(document.getElementById("nobroke").checked == true && fail_two != 2)
+				{
+					needpoint = 50;
+				}else if(fail_two == 2)
+					{
+						needpoint= 9;
+					}
+				else {}
+				;
+			document.getElementById("needmoney").innerHTML = "需要點數："+ needpoint ;
+			}else
+			if(document.getElementById("usepoint").checked == false)
+			{
+			RBneedmoney();
+			document.getElementById("needmoney").innerHTML = "需要金額："+ needmoney ;
+			};		
+		}
+			function usepointset(){
+				document.getElementById("nobroke").checked = false;
+				
+			}
+				
+//改變防爆   
+			function opennobroke(){
+				usepoint();
+			}
+
+//維持防爆   
+			function autonobroke(){
+			if(document.getElementById("autonobroke").checked == true)
+			{
+				document.getElementById("automoneynobroke").checked = false;
+			if(star_what <=11)
+				{
+					document.getElementById("nobroke").checked = false;
+					
+				}
+				 else if(star_what > 11 && star_what <=16 )
+				{
+						//15星以下不報開啟
+						if(document.getElementById("onefivenobroke").checked == true)
+						{
+							if(star_what<15)
+							{
+							document.getElementById("nobroke").checked = false;
+							}
+						}else{
+								document.getElementById("nobroke").checked = true;
+								document.getElementById("usepoint").checked = false ;	
+							};
+							
+						//5、10、15必過開啟
+						 if(document.getElementById("ftfsuccess").checked == true && star_what==15)
+									{
+									document.getElementById("nobroke").checked = false;
+									}
+							else if(document.getElementById("onefivenobroke").checked == 		true&& star_what<15){
+								document.getElementById("nobroke").checked = false;
+								document.getElementById("usepoint").checked = false ;}else
+								{
+								document.getElementById("nobroke").checked = true;
+								document.getElementById("usepoint").checked = false ;
+								}
+									
+				
+							
+			
+				
+				}
+				else if(star_what >16)
+				{
+					document.getElementById("nobroke").checked = true ;
+					document.getElementById("usepoint").checked = true;
+				} 
+				;
+
+				if (fail_two == 2){
+				document.getElementById("usepoint").checked = false;
+				};
+				usepoint();
+				
+			}else{
+				automoneynobroke();
+			};
+						
+}
+			
+			function automoneynobroke(){
+				if(document.getElementById("automoneynobroke").checked == true)
+			{
+				document.getElementById("autonobroke").checked = false;
+			 
+				if(star_what <=11)
+				{
+					document.getElementById("nobroke").checked = false;
+					
+				}
+				 else if(star_what > 11 && star_what <=16 )
+				{
+						//15星以下不報開啟
+						if(document.getElementById("onefivenobroke").checked == true)
+						{
+							if(star_what<15)
+							{
+							document.getElementById("nobroke").checked = false;
+							}
+						}else{
+								document.getElementById("nobroke").checked = true;
+								document.getElementById("usepoint").checked = false ;	
+							};
+							
+						//5、10、15必過開啟
+						 if(document.getElementById("ftfsuccess").checked == true && star_what==15)
+									{
+									document.getElementById("nobroke").checked = false;
+									}
+							else if(document.getElementById("onefivenobroke").checked == 		true&& star_what<15){
+								document.getElementById("nobroke").checked = false;
+								document.getElementById("usepoint").checked = false ;}else
+								{
+								document.getElementById("nobroke").checked = true;
+								document.getElementById("usepoint").checked = false ;
+								}
+									
+				
+							
+			
+				
+				}
+				else if(star_what >16 && star_what <20)
+				{
+					document.getElementById("nobroke").checked = false ;
+					document.getElementById("usepoint").checked = false;
+				}else if(star_what>=20){
+					document.getElementById("nobroke").checked = true ;
+					document.getElementById("usepoint").checked = true;
+				}
+				
+				;
+
+			if (fail_two == 2){
+				document.getElementById("usepoint").checked = false;
+				};
+				usepoint();
+			}else{
+				document.getElementById("needmoney").innerHTML = "需要金額："+ needmoney;
+				
+			}
+						
+	}	
+			
+			function nobrokeset(){
+				if(document.getElementById("nobroke").checked == true)
+				{
+					if( document.getElementById("usepoint").checked == false){
+					if(star_what >=17)
+					{
+						alert("沒辦法防爆喔!!，請使用點數!!")
+						document.getElementById("nobroke").checked = false ;
+					}else if(star_what <=11)
+						{alert("沒辦法防爆喔!!")
+						document.getElementById("nobroke").checked = false ;
+						}
+					}
+					else{}
+				}
+			
+			}
+//需要金額
+			function RBneedmoney(){
+			level = document.getElementById("dropdownlevel").value;
+			if(star_what<10)			  
+			{
+				needmoney= 
+					Math.trunc(((1000+Math.pow(level,3)*(star_what+1)/25))/100)*100
+			}else
+			if(star_what>=10 && star_what<15)
+			{
+				needmoney= 
+					Math.trunc(((1000+(Math.pow(level,3)*Math.pow((star_what+1),2.7))/400))/100)*100
+			}else	
+			if(star_what>=15 && star_what<25)
+			{
+				needmoney= 
+					Math.trunc(((1000+(Math.pow(level,3)*Math.pow((star_what+1),2.7))/200))/100)*100
+			}else{
+			
+				
+			
+			needmoney=0};
+			//使用點數打開
+			if(document.getElementById("usepoint").checked == true)
+				{
+				usepoint();
+				document.getElementById("needmoney").innerHTML = "需要點數："+ needpoint ;
+				}else
+			//防爆打開
+			if(document.getElementById("nobroke").checked == true && fail_two != 2)
+				{
+					needmoney = needmoney+needmoney;
+					document.getElementById("needmoney").innerHTML = "需要金額："+ needmoney 
+				}else if(document.getElementById("nobroke").checked == true && fail_two == 2)
+					{ needmoney = needmoney;
+					 document.getElementById("needmoney").innerHTML = "需要金額："+ needmoney 
+				}else {
+					document.getElementById("needmoney").innerHTML = "需要金額："+ needmoney;
+					
+				}
+				;
+				
+			if(document.getElementById("seventyoff").checked == true)
+				{
+					needmoney=Math.round(needmoney*0.7);
+					
+					if(document.getElementById("usepoint").checked == true)
+					{document.getElementById("needmoney").innerHTML = "需要點數："+ needpoint ;}
+					else
+					{
+					document.getElementById("needmoney").innerHTML = "需要金額："+ needmoney ; 
+					}
+				};
+			
+			
+	}
+			
+//選擇等級
+			function levelselect(){
+			level = document.getElementById("dropdownlevel").value;
+				
+			if (star_what>=20){
+			document.getElementById("usepoint").checked = true ;
+			};
+				
+			if(document.getElementById("usepoint").checked == true)			  
+			{
+				usepoint();
+			}
+			else
+			{
+				RBneedmoney();
+			}
+
+				
+			if(star_what<12){
+			document.getElementById("nobroke").checked = false ;
+			};
+				
+			}
+				
+			
+//選擇星力
+			function starselect(){
+			star_what = Number(document.getElementById("dropdownstar").value);
+			fail_two = 0;
+				
+			if (star_what>=20){
+			document.getElementById("usepoint").checked = true ;
+			};
+				
+			if(document.getElementById("usepoint").checked == true)			  
+			{
+				usepoint();
+			}
+			else
+			{
+				RBneedmoney();
+			}
+			document.getElementById("whatstar").innerHTML = star_what +"星";
+			whatstar();
+			document.getElementById("starwhat").innerHTML = "成功機率："+successpro+"%";
+			if(star_what<12){
+			document.getElementById("nobroke").checked = false ;
+			};
+			if(star_what<18){
+			document.getElementById("usepoint").checked = false ;
+			};		
+			showstar();
+				
+			}
+			
+//衝星		
+		//判斷目前的機率
+			function whatstar(){
+			if(star_what==0){successpro=95;brokenpro=0;stardownpro=0;starnoch=0}else
+			if(star_what==1){successpro=90;brokenpro=0;stardownpro=0;starnoch=10}else
+			if(star_what==2){successpro=85;brokenpro=0;stardownpro=0;starnoch=15}else
+			if(star_what==3){successpro=85;brokenpro=0;stardownpro=0;starnoch=15}else
+			if(star_what==4){successpro=80;brokenpro=0;stardownpro=0;starnoch=20}else
+			if(star_what==5){successpro=75;brokenpro=0;stardownpro=0;starnoch=25}else
+			if(star_what==6){successpro=70;brokenpro=0;stardownpro=0;starnoch=30}else
+			if(star_what==7){successpro=65;brokenpro=0;stardownpro=0;starnoch=35}else
+			if(star_what==8){successpro=60;brokenpro=0;stardownpro=0;starnoch=40}else
+			if(star_what==9){successpro=55;brokenpro=0;stardownpro=0;starnoch=45}else
+			if(star_what==10){successpro=50;brokenpro=0;stardownpro=0;starnoch=50}else
+			if(star_what==11){successpro=45;brokenpro=0;stardownpro=55;starnoch=0}else
+			if(star_what==12){successpro=40;brokenpro=6;stardownpro=54;starnoch=0}else
+			if(star_what==13){successpro=35;brokenpro=13;stardownpro=52;starnoch=0}else
+			if(star_what==14){successpro=30;brokenpro=14;stardownpro=56;starnoch=0}else
+			if(star_what==15){successpro=30;brokenpro=21;stardownpro=0;starnoch=49}else
+			if(star_what==16){successpro=30;brokenpro=21;stardownpro=49;starnoch=0}else
+			if(star_what==17){successpro=30;brokenpro=21;stardownpro=49;starnoch=0}else
+			if(star_what==18){successpro=30;brokenpro=28;stardownpro=42;starnoch=0}else
+			if(star_what==19){successpro=30;brokenpro=28;stardownpro=42;starnoch=0}else
+			if(star_what==20){successpro=30;brokenpro=35;stardownpro=0;starnoch=35}else
+			if(star_what==21){successpro=30;brokenpro=35;stardownpro=35;starnoch=0}else
+			if(star_what==22){successpro=3;brokenpro=58.2;stardownpro=38.8;starnoch=0}else
+			if(star_what==23){successpro=2;brokenpro=58.8;stardownpro=39.2;starnoch=0}else
+			if(star_what==24){successpro=1;brokenpro=59.4;stardownpro=39.6;starnoch=0}else
+			if(star_what==25){successpro=0;brokenpro=0;stardownpro=0;starnoch=0}else
+			{};
+				
+			//開啟5、10、15星必過
+			if(document.getElementById("ftfsuccess").checked == true){
+				if(star_what==5 || star_what==10 || star_what==15){successpro=100;brokenpro=0;stardownpro=0;starnoch=0}else
+				{};
+			}
+				;
+			//15以下不報
+			if(document.getElementById("onefivenobroke").checked == true){
+				if(star_what==12){successpro=40;brokenpro=0;stardownpro=60;starnoch=0}else
+				if(star_what==13){successpro=35;brokenpro=0;stardownpro=65;starnoch=0}else
+				if(star_what==14){successpro=30;brokenpro=0;stardownpro=70;starnoch=0}else
+				{};
+				
+			};
+				
+			document.getElementById("starwhat").innerHTML = "成功機率："+successpro +"%";
+		
+			
+			}
+				
+			function rushstar(){
+			//衝星次數+1
+			star_time = star_time + 1 ;
+			//亂數1-100
+			ran = (Math.round(Math.random()*1000))/10;
+			document.getElementById("random").innerHTML = "亂數："+ran ;
+			//計算錢
+			if(document.getElementById("usepoint").checked == true)			  
+			{
+				usepoint();
+				cost = needpoint ;
+				point = point + cost ;
+				document.getElementById("point").innerHTML = "已花費楓點："+ point
+			}
+			else
+			{
+				RBneedmoney();
+				cost = needmoney ;
+				money = money + cost ;
+				document.getElementById("money").innerHTML = "已花費楓幣："+ money ;
+			
+			}
+			//判斷目前的機率
+			whatstar();
+			//衝星成功失敗否
+			star();
+			//需要金額
+			
+
+				
+			//解除防爆
+			if(star_what <=11){
+				document.getElementById("nobroke").checked = false;
+				usepoint();
+			}else{
+			//維持防爆
+				autonobroke();
+			};
+			
+			
+			
+			
+			
+			
+				
+				document.getElementById("starwhat").innerHTML = "成功機率："+ successpro +"%";
+				document.getElementById("whatstar").innerHTML = star_what +"星";
+				document.getElementById("star_time").innerHTML = "已衝次數："+ star_time ;
+				document.getElementById("fail").innerHTML = "失敗次數："+ fail_time ;
+				document.getElementById("broke_time").innerHTML = "破壞次數："+ broke_time ;
+				
+			if(fail_two == 2)
+					{document.getElementById("chance").innerHTML = "CHANCE" ;
+					 
+					 document.getElementById("nobroke").checked = false ;
+					 document.getElementById("starwhat").innerHTML = "成功機率："+100+"%";
+					 }else{document.getElementById("chance").innerHTML = "　" ;
+						 };
+			
+			
+			//達到目標星數警示
+			if(star_what == document.getElementById("dropdowntarget").value)
+				{
+					showalert();
+				}
+			showstar();
+			}
+				
+			function showalert(){
+				alert("恭喜!!已經達到目標星數!!")
+			}
+	    //衝星的過程判斷失敗與否
+			function star(){
+				
+				//失敗兩次成功率100%
+				if (fail_two == 2){
+					document.getElementById("usepoint").checked = false;
+					successpro =100;
+					fail_two=0;
+					}
+				else if 
+			//防爆
+				(document.getElementById("nobroke").checked == true )
+				{
+					//在10、15、20的情況下
+					if(star_what==10||star_what==15 ||star_what==20)
+					{
+						stardownpro = 0;
+						starnoch = successpro + stardownpro + brokenpro;
+						brokenpro = 0;
+					}
+					//其他情況下
+					else{
+					stardownpro = successpro + stardownpro + brokenpro;
+					starnoch = stardownpro + starnoch ;
+					brokenpro = 0;
+					};
+				}
+
+				//沒防爆情況
+				else
+				{
+				stardownpro = successpro + stardownpro;
+				brokenpro = stardownpro + brokenpro;
+				starnoch = brokenpro + starnoch ;
+					};
+			//15星以下不爆
+				if
+				(document.getElementById("onefivenobroke").checked == true && whatstar<15)
+					{
+						whatstar();
+					
+					//其他情況下
+						if(star_what<=14)
+						{
+						stardownpro = successpro + stardownpro + brokenpro;
+						starnoch = stardownpro + starnoch ;
+						brokenpro = 0;
+						}else{};
+						
+						}
+					 ;
+	
+			//5 10 15必過打開
+				if
+				(document.getElementById("ftfsuccess").checked == true )
+				{
+					if(star_what==5||star_what==10 ||star_what==15)
+						{
+							successpro =100;
+							stardownpro = 0;
+							starnoch = 0;
+							brokenpro = 0;
+						}
+				} ;
+		
+				
+				
+			//成功機率<維持機率<破壞機率<沒變機率 看亂數落在哪一區
+			//ex:成功20%失敗20%破壞20%沒變40%，successpro=20;stardownpro=40;brokenpro=60;starnoch=100;
+			//成功
+				if(ran < successpro && ran>=0)
+				{	
+					if(document.getElementById("staroneplusone").checked == true && star_what<=10)
+					{star_what=star_what+2;fail_two=0}
+					else{
+					star_what=star_what+1;fail_two=0
+					}
+					document.getElementById("dragon").src = "image/up.png";
+					document.getElementById("anyasay").innerHTML = "成功!!";
+				}
+				else if
+				//失敗下降11~14 16~19 21~24
+				( ran < stardownpro && ran >= successpro){
+					fail_time=fail_time+1;
+					star_what=star_what-1;
+					fail_two=fail_two+1;
+					document.getElementById("dragon").src = "image/down.png";
+					document.getElementById("anyasay").innerHTML = "失敗!!";
+				}
+					
+				else if
+				//失敗爆炸 12以上
+				( ran < brokenpro && ran >= stardownpro && brokenpro!=0 )
+				{
+				broke_time=broke_time+1;
+				fail_time=fail_time+1;
+				star_what=12;
+				 fail_two=0;
+				document.getElementById("dragon").src = "image/DESTROY.png";
+				document.getElementById("anyasay").innerHTML = "爆炸了乾!!";
+				}
+				
+				else if
+				//失敗沒變 10、15、20	
+				(ran < starnoch && ran >= brokenpro)
+				{
+				fail_time=fail_time+1;
+				star_what = star_what;
+				 fail_two = 0;
+				document.getElementById("dragon").src = "image/down.png";
+				document.getElementById("anyasay").innerHTML = "失敗!!";
+				}
+				
+				else {} ;
+				
+		
+				
+				
+		
+				
+			whatstar();
+				
+		}
+		
+//歸零	
+			function zero(){
+				star_time= 0 ;
+				fail_two=0 ;
+				fail_time=0;
+				money = 0;
+				point = 0;
+				broke_time = 0;
+				star_what = Number(document.getElementById("dropdownstar").value);
+				document.getElementById("nobroke").checked = false;
+				document.getElementById("ftfsuccess").checked = false;
+				document.getElementById("autonobroke").checked = false;
+				document.getElementById("automoneynobroke").checked = false;
+				document.getElementById("usepoint").checked = false;
+				document.getElementById("staroneplusone").checked = false;
+				document.getElementById("onefivenobroke").checked = false;
+				document.getElementById("seventyoff").checked = false;
+		
+				RBneedmoney();
+				document.getElementById("anyasay").innerHTML = "祝你衝星愉快!";
+				document.getElementById("needmoney").innerHTML = "需要金額："+ needmoney ;
+				document.getElementById("whatstar").innerHTML = star_what +"星";
+				document.getElementById("star_time").innerHTML = "已衝次數：" + star_time ;
+				document.getElementById("fail").innerHTML = "失敗次數："+"0" ;
+				document.getElementById("broke_time").innerHTML = "破壞次數："+"0" ;
+				document.getElementById("money").innerHTML = "已花費楓幣："+"0" ;
+				document.getElementById("point").innerHTML = "已花費楓點："+"0" ;
+				showstar();
+				document.getElementById("dragon").src = "image/normal.png";
+			}
+	//星星圖片更改
+			function showstar(){
+	
+				var idstar = "star"+star_what;
+				var starloop = 0;
+				var nostarloop = 0;
+				var loopzero = 0;
+	
+				
+			
+				if(star_what==0){
+					for(loopzero=1 ; loopzero<26 ; loopzero++){
+						document.getElementById("star"+loopzero).src = "image/noSTAR.png" ;
+					};
+				}
+				else{
+				for(nostarloop=1 ; nostarloop<26 ; nostarloop++){
+				document.getElementById("star"+nostarloop).src = "image/noSTAR.png" ;
+				};
+					
+				for(starloop=1 ; starloop<star_what+1 ; starloop++){
+				document.getElementById("star"+starloop).src = "image/STAR.png" ;
+				};
+				};
+				
+				
+		}
+				
+			function rushstar100(){
+				var timetostar = 0;
+				for(timetostar=0 ; timetostar<100 ; timetostar++){
+					rushstar();
+					if (star_what == document.getElementById("dropdowntarget").value){
+						break ;
+					}
+				}
+				
+			}
+				
+			function togoal(){
+				var i = 0;
+				
+				for(i=0 ; i<i+1 ; i++){
+					rushstar();
+					if (star_what == document.getElementById("dropdowntarget").value){
+						break ;
+					}
+				}
+			}
+			
+			</script>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		</div>
+		<div class="rushstar100">
+			<button onClick="rushstar100()" class="buttonstar1">
+			<p>衝星100次</p></button>
+		</div>
+	</div>
+<div class="information">
+	<input type="checkbox" class="check" name="30%" value="30%" id="seventyoff" onChange="RBneedmoney()">
+	<span class="check">星力7折</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="checkbox" class="check" onClick="whatstar()" id="ftfsuccess" name="必過" value="必過"><span class="check">5、10、15星必過 <br>   </span>
+	<input type="checkbox" class="check" onClick="whatstar()" name="不爆" value="不爆"  id="onefivenobroke"><span class="check" >15星以下不爆</span>
+	&nbsp;
+	<input type="checkbox" class="check" name="+2" value="+2" 
+		   id = "staroneplusone"><span class="check">10星以下1+1</span>
+	
+	<br>
+	<input type="checkbox" class="check" name="autonobroke" onChange="autonobroke()"   value="autonobroke" id="autonobroke"><span class="check">自動防爆</span>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	<input type="checkbox" class="check" name="automoneynobroke" onChange="automoneynobroke()"   value="automoneynobroke" id="automoneynobroke"><span class="check">20星以下只使用楓幣防爆</span>
+	
+	<br>
+	<input type="checkbox" class="check" name="防爆" value="防爆" id="nobroke"  onChange="opennobroke()" onClick="nobrokeset()"> <span class="check">防爆</span>
+	
+	<br>
+	<input type="checkbox" class="check" name="點數" value="點數" id="usepoint" onChange="usepoint()" onClick="usepointset()"><span class="check">使用點數</span>
+	
+	<p id="needmoney">需要金額：41000</p>
+
+	<span id="level" class="check" >裝備等級：</span>
+	<select id ="dropdownlevel" onChange="levelselect()" value="100"> 
+		<option value="100">裝備等級</option>
+		<option value="100">100</option>
+		<option value="110">110</option>
+		<option value="120">120</option>
+		<option value="130">130</option>
+		<option value="140">140</option>
+		<option value="150">150</option>
+		<option value="150">160</option>
+		<option value="150">170</option>
+		<option value="150">180</option>
+		<option value="150">200</option>
+		<option value="150">250</option>
+	</select>
+<br>
+<br>
+	<span id="star_what" class="check" value="0">從哪星開始：</span>
+	<select id ="dropdownstar" onChange="starselect()">
+		<option value="0">0</option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+		<option value="11">11</option>
+		<option value="12">12</option>
+		<option value="13">13</option>
+		<option value="14">14</option>
+		<option value="15">15</option>
+		<option value="16">16</option>
+		<option value="17">17</option>
+		<option value="18">18</option>
+		<option value="19">19</option>
+		<option value="20">20</option>
+		<option value="21">21</option>
+		<option value="22">22</option>
+		<option value="23">23</option>
+		<option value="24">24</option>
+		</select><br>
+
+	<span id="target" class="check" value="0">目標星數：</span>
+	<select id ="dropdowntarget">
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+		<option value="11">11</option>
+		<option value="12">12</option>
+		<option value="13">13</option>
+		<option value="14">14</option>
+		<option value="15">15</option>
+		<option value="16">16</option>
+		<option value="17">17</option>
+		<option value="18">18</option>
+		<option value="19">19</option>
+		<option value="20">20</option>
+		<option value="21">21</option>
+		<option value="22">22</option>
+		<option value="23">23</option>
+		<option value="24">24</option>
+		<option value="25">25</option>
+		</select>
+		<p id="starwhat">成功機率：95%</p>
+	<p id="star_time">已衝次數：0</p>
+	<p id="fail">失敗次數：0</p>
+	<p id="broke_time"> 破壞次數：0</p>
+	<p id="money">已花費楓幣：0</p>
+	<p id="point">已花費楓點：0</p>
+	<p id="random">亂數：</p>
+
+<div class="tozero">
+		<button onClick="zero()" class="buttonstar2"><p>歸零</p></button>
+
+
+		<button onClick="togoal()" class="buttonstar2"><p>衝到目標為止</p></button>
+
+
+</div>
+<br>
+
+<table>
+	<tr >
+		<td >強化階段</td>
+		<td>成功機率</td>
+		<td>破壞機率</td>
+		<td>失敗時<br>
+			下滑機率</td>
+		<td>失敗時<br>
+			維持機率</td>
+	</tr>
+	<tr>
+		<td>0＞1</td><td>95</td><td>0</td><td>0</td><td>5</td>
+	</tr>
+	<tr >
+		<td>1＞2</td><td>90</td><td>0</td><td >0</td><td >10</td>
+	</tr>
+		<tr>
+		<td>2＞3</td><td>85</td><td >0</td><td >0</td><td >15</td>
+	</tr>
+		<tr>
+		<td>3＞4</td><td>85</td><td>0</td><td>0</td><td >15</td>
+	</tr>
+		<tr>
+		<td>4＞5</td><td>80</td><td >0</td><td >0</td><td >20</td>
+	</tr>
+		<tr>
+		<td>5＞6</td><td >75</td><td>0</td><td>0</td><td >25</td>
+	</tr>
+		<tr>
+		<td>6＞7</td><td >70</td><td >0</td><td>0</td><td >30</td>
+	</tr>
+		<tr>
+		<td>7＞8</td><td>65</td><td >0</td><td >0</td><td >35</td>
+	</tr>
+		<tr>
+		<td>8＞9</td><td>60</td><td>0</td><td>0</td><td>40</td>
+	</tr>
+		<tr>
+		<td>9＞10</td><td>55</td><td>0</td><td>0</td><td>45</td>
+	</tr>
+		<tr>
+		<td>10＞11</td><td>50</td><td>0</td><td>0</td><td>50</td>
+	</tr>
+		<tr>
+		<td>11＞12</td><td>45</td><td>0</td><td>55</td><td>0</td>
+	</tr>
+		<tr>
+		<td>12＞13</td><td>40</td><td>6</td><td>54</td><td>0</td>
+	</tr>
+		<tr>
+		<td>13＞14</td><td>35</td><td>13</td><td>52</td><td>0</td>
+	</tr>
+		<tr>
+		<td>14＞15</td><td>30</td><td>14</td><td>56</td><td>0</td>
+	</tr>
+		<tr>
+		<td>15＞16</td><td>30</td><td>21</td><td>0</td><td>49</td>
+	</tr>
+		<tr>
+		<td>16＞17</td><td>30</td><td>21</td><td>49</td><td>0</td>
+	</tr>
+		<tr>
+		<td>17＞18</td><td>30</td><td>21</td><td>49</td><td>0</td>
+	</tr>
+		<tr>
+		<td>18＞19</td><td>30</td><td>28</td><td>42</td><td>0</td>
+	</tr>
+		<tr>
+		<td>19＞20</td><td>30</td><td>28</td><td>42</td><td>0</td>
+	</tr>
+		<tr>
+		<td>20＞21</td><td>30</td><td>35</td><td>0</td><td>35</td>
+	</tr>
+		<tr>
+		<td>21＞22</td><td>30</td><td>35</td><td>35</td><td>0</td>
+	</tr>
+		<tr>
+		<td>22＞23</td><td>3</td><td>58.2</td><td>38.8</td><td>0</td>
+	</tr>
+		<tr>
+		<td>23＞24</td><td>2</td><td>58.8</td><td>39.2</td><td>0</td>
+	</tr>
+		<tr>
+		<td>24＞25</td><td>1</td><td>59.4</td><td>39.6</td><td>0</td>
+	</tr>
+	</table>
+P.S. <br>
+1.請不要嘗試衝到25星，有可能會跑不出結果<br>
+
+2.若不防爆衝22星以上，會跑很久需要等一下<br>
+3.如果有測出什麼BUG可以跟會長反應
+
+
+		
+</div>
+</div>
+</body>
+</html>
+
